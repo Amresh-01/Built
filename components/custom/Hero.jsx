@@ -4,12 +4,20 @@ import { ArrowRight } from "lucide-react";
 import { MessagesContext } from "context/MessagesContext";
 import Colors from "data/Colors";
 import Lookup from "data/Lookup";
+import { UserDetailContext } from "context/UserDetailContext";
+import SignInDialog from "./SignInDialog";
 
 const Hero = () => {
   const [userInput, setUserInput] = useState("");
   const { messages, setMessages } = useContext(MessagesContext);
+  const { userDetail, setUserDetail } = useContext(UserDetailContext);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const onGenerate = (input) => {
+    if (!userDetail?.name) {
+      setOpenDialog(true);
+      return;
+    }
     if (!input.trim()) return;
     setMessages((prevMessages) => [
       ...prevMessages,
@@ -57,6 +65,10 @@ const Hero = () => {
           </h2>
         ))}
       </div>
+      <SignInDialog
+        openDialog={openDialog}
+        closeDialog={(v) => setOpenDialog(v)}
+      />
     </div>
   );
 };
